@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>O que aprendemos com o incidente de 2018 — British Airways</title>
+  <meta name="description" content="Artigo institucional: linha do tempo, arquitetura do ataque, falhas de segurança e soluções sob a perspectiva de ADS." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html" aria-label="British Airways Compliance">
+        <span class="logo-mark">BA</span>
+        <span>British Airways</span>
+      </a>
+      <nav class="nav-desktop" aria-label="Principal">
+        <a href="index.html#programa">Programa</a>
+        <a href="index.html#pilares">Pilares</a>
+        <a href="index.html#insights" aria-current="page">Insights</a>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-primary" href="index.html">Voltar ao início</a>
+        <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
+          <span></span>
+        </button>
+      </div>
+    </div>
+    <nav class="nav-mobile" aria-label="Mobile">
+      <a href="index.html">Início</a>
+      <a href="index.html#insights">Insights</a>
+      <a href="#sec-contexto">Contexto</a>
+      <a href="#sec-timeline">Linha do tempo</a>
+      <a href="#sec-arquitetura">Arquitetura</a>
+      <a href="#sec-falhas">Falhas</a>
+      <a href="#sec-solucoes">Soluções ADS</a>
+    </nav>
+  </header>
+
+  <header class="article-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Início</a>
+        <span>/</span>
+        <a href="index.html#insights">Insights</a>
+        <span>/</span>
+        <span>Aprendizados 2018</span>
+      </nav>
+      <p class="cat">Incidente · Compliance · Trust</p>
+      <h1>O que aprendemos com o incidente de 2018</h1>
+      <p class="deck">
+        Em 2018, atacantes comprometeram nosso ambiente digital e capturaram dados
+        de pagamento de centenas de milhares de clientes. Este artigo reúne a linha
+        do tempo, a arquitetura do ataque, as falhas de segurança e a camada de
+        soluções sob a ótica de Análise e Desenvolvimento de Sistemas.
+      </p>
+      <div class="article-meta">
+        <span>Base: Penalty Notice do ICO · 16 out 2020</span>
+        <span>·</span>
+        <span>Equipe Trust &amp; Compliance</span>
+        <span>·</span>
+        <span>18 min de leitura</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container article-layout">
+    <aside class="toc" aria-label="Sumário">
+      <h2>Neste artigo</h2>
+      <a href="#sec-contexto">1. Contexto e impacto</a>
+      <a href="#sec-timeline">2. Linha do tempo</a>
+      <a href="#sec-arquitetura">3. Arquitetura do ataque</a>
+      <a href="#sec-falhas">4. Falhas de segurança</a>
+      <a href="#sec-solucoes">5. Soluções · perspectiva ADS</a>
+      <a href="#sec-conclusao">6. Conclusão</a>
+    </aside>
+
+    <article class="article-content">
+      <h2 id="sec-contexto">1. Contexto e impacto</h2>
+      <p>
+        Entre junho e setembro de 2018, um atacante usou credenciais comprometidas
+        de um prestador, a Swissport, para entrar pelo Citrix Access Gateway, nosso
+        portal de acesso remoto. Sem MFA — autenticação multifator — na conta
+        utilizada, avançou na rede, elevou privilégios e alterou JavaScript do site,
+        a linguagem que roda no navegador, para copiar dados de cartão e enviá-los
+        ao domínio BAways.com.
+      </p>
+      <p>
+        A captura ativa no site durou cerca de 15 dias, de 21 de agosto a 5 de
+        setembro de 2018. O ICO, a autoridade britânica de proteção de dados,
+        estimou cerca de 429.612 titulares potencialmente afetados. Em 16 de outubro
+        de 2020, a multa final foi de 20 milhões de libras, após proposta inicial de
+        cerca de 183,39 milhões de libras, com fundamento nos artigos 5, parágrafo 1,
+        alínea f, e 32 do GDPR, o Regulamento Geral sobre a Proteção de Dados.
+      </p>
+      <div class="note">
+        A atribuição Magecart é comum na indústria para esse tipo de captura de
+        cartão no navegador. O ICO documenta o mecanismo e as falhas da empresa,
+        sem depender dessa atribuição forense.
+      </div>
+
+      <h2 id="sec-timeline">2. Linha do tempo</h2>
+      <p>
+        A cadeia começou anos antes do skimming no site. Um recurso de teste em
+        produção desde dezembro de 2015 registrava dados de cartão, inclusive o CVV,
+        o código de segurança do cartão. Em outubro de 2017 a política interna já
+        pedia MFA em todo acesso remoto. O GDPR entrou em vigor em 25 de maio de 2018.
+      </p>
+      <ul class="timeline">
+        <li>
+          <strong>22 de junho de 2018</strong>
+          Acesso inicial via Citrix com conta Swissport sem MFA. Cinco contas do
+          prestador foram identificadas como comprometidas.
+        </li>
+        <li>
+          <strong>22 a 26 de junho de 2018</strong>
+          Saída do ambiente Citrix e elevação de privilégio, inclusive com senha de
+          Domain Administrator — administrador do domínio Windows — em texto claro.
+        </li>
+        <li>
+          <strong>26 de julho de 2018</strong>
+          Acesso a registros internos com dados de cartão. Cerca de 108 mil cartões
+          potencialmente expostos por essa via.
+        </li>
+        <li>
+          <strong>14 a 25 de agosto de 2018</strong>
+          Preparação e alteração do JavaScript do site, associada na literatura
+          técnica à biblioteca Modernizr 2.6.2, e domínio BAways.com com certificado
+          SSL, o certificado que mostra o cadeado no navegador.
+        </li>
+        <li>
+          <strong>21 de agosto a 5 de setembro de 2018</strong>
+          Captura ativa de dados de pagamento por cerca de 15 dias.
+        </li>
+        <li>
+          <strong>5 a 7 de setembro de 2018</strong>
+          Alerta de terceiro, contenção em cerca de 90 minutos, notificação ao ICO
+          e aos clientes.
+        </li>
+        <li>
+          <strong>4 de julho de 2019 · 16 de outubro de 2020</strong>
+          Aviso de intenção de multa elevada; multa final de 20 milhões de libras.
+        </li>
+      </ul>
+      <p>
+        A resposta após o alerta foi rápida. A prevenção e a detecção interna,
+        porém, falharam por mais de dois meses de presença do atacante na rede.
+      </p>
+
+      <h2 id="sec-arquitetura">3. Arquitetura do ataque</h2>
+      <p>
+        O incidente não foi um ataque isolado só no site. Foi uma cadeia em quatro
+        zonas: atacante na internet; perímetro Citrix; rede interna; clientes e pagamento.
+      </p>
+      <figure class="figure">
+        <img src="assets/diagrama-arquitetura-ataque-ba-2018.png" alt="Diagrama técnico da arquitetura do ataque British Airways 2018" />
+        <figcaption>Figura 1 — Arquitetura do ataque em zonas e etapas da kill chain.</figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="assets/diagrama-ataque-ba-2018-demo.png" alt="Versão simplificada do diagrama de ataque" />
+        <figcaption>Figura 2 — Visão simplificada para demonstração.</figcaption>
+      </figure>
+      <h3>Fluxo resumido</h3>
+      <ol>
+        <li>Credenciais Swissport comprometidas.</li>
+        <li>Login no Citrix Access Gateway sem MFA — 13 de 243 aplicações no gateway sem MFA.</li>
+        <li>Saída do Citrix e reconhecimento na rede interna.</li>
+        <li>Elevação com contas privilegiadas em texto claro.</li>
+        <li>Acesso a logs internos e alteração do JavaScript do checkout.</li>
+        <li>Cliente digita o cartão; dados seguem para BAways.com.</li>
+        <li>Terceiro detecta; contenção e notificações.</li>
+      </ol>
+
+      <h2 id="sec-falhas">4. Principais falhas de segurança</h2>
+      <p>
+        O ICO concluiu que faltaram medidas técnicas e organizacionais adequadas.
+        Agrupamos oito falhas principais que explicam por que a cadeia avançou.
+      </p>
+      <figure class="figure">
+        <img src="assets/principais-falhas-seguranca-ba-2018.png" alt="Resumo das oito principais falhas de segurança" />
+        <figcaption>Figura 3 — Síntese das principais falhas de segurança.</figcaption>
+      </figure>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>N.º</th><th>Falha</th><th>Efeito</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>MFA inconsistente</td><td>Entrada só com senha</td></tr>
+            <tr><td>2</td><td>Acesso de terceiro frágil</td><td>Uso de credenciais Swissport</td></tr>
+            <tr><td>3</td><td>Isolamento Citrix insuficiente</td><td>Alcance além do necessário ao parceiro</td></tr>
+            <tr><td>4</td><td>Senhas privilegiadas em texto claro</td><td>Elevação a administrador do domínio</td></tr>
+            <tr><td>5</td><td>Dados sensíveis em registros</td><td>Exposição de cartões antes do site</td></tr>
+            <tr><td>6</td><td>Integridade do código do site</td><td>Captura no checkout</td></tr>
+            <tr><td>7</td><td>Monitoramento tardio</td><td>Descoberta por terceiro</td></tr>
+            <tr><td>8</td><td>Política diferente da operação</td><td>Controles previstos sem aplicação consistente</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="sec-solucoes">5. Camada de soluções sob a perspectiva de ADS</h2>
+      <p>
+        ADS significa Análise e Desenvolvimento de Sistemas. Sob essa ótica, a
+        resposta ao incidente não é só uma lista de ferramentas: é um sistema de
+        requisitos, processos, modelagem, desenvolvimento seguro, controles,
+        implantação e melhoria contínua.
+      </p>
+      <figure class="figure">
+        <img src="assets/camada-solucoes-ads-ba-2018.png" alt="Oito camadas de solução na perspectiva ADS" />
+        <figcaption>Figura 4 — Camada de soluções na perspectiva de ADS.</figcaption>
+      </figure>
+      <h3>As oito camadas</h3>
+      <ol>
+        <li><strong>Levantamento e requisitos</strong> — ativos, dados de cartão, acessos de terceiros e obrigações do GDPR.</li>
+        <li><strong>Análise de processos</strong> — onboarding de parceiros, acesso remoto, publicação de código e resposta a incidente.</li>
+        <li><strong>Modelagem da solução</strong> — módulos de identidade, segmentação, segredos, frontend e monitoramento.</li>
+        <li><strong>Desenvolvimento seguro</strong> — ciclo de vida com revisão, testes e inventário de bibliotecas JavaScript.</li>
+        <li><strong>Controles técnicos</strong> — MFA, menor privilégio, cofre de senhas, isolamento e alertas.</li>
+        <li><strong>Controles organizacionais</strong> — política alinhada à operação, contratos, treino e evidências.</li>
+        <li><strong>Implantação e operação</strong> — go-live controlado e runbooks de contenção.</li>
+        <li><strong>Monitoramento e melhoria</strong> — indicadores, auditoria e ciclo contínuo de ajuste.</li>
+      </ol>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Falha</th><th>Resposta ADS</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>MFA inconsistente</td><td>Requisito e MFA em todo acesso remoto</td></tr>
+            <tr><td>Acesso de terceiro frágil</td><td>Onboarding e módulo de identidade</td></tr>
+            <tr><td>Isolamento Citrix insuficiente</td><td>Segmentação e menor privilégio</td></tr>
+            <tr><td>Senhas em texto claro</td><td>Cofre de segredos e ciclo de contas admin</td></tr>
+            <tr><td>Dados em registros</td><td>Minimização e testes no ciclo de vida</td></tr>
+            <tr><td>Código do site</td><td>Desenvolvimento seguro e controles do frontend</td></tr>
+            <tr><td>Monitoramento tardio</td><td>Detecção, alertas e indicadores</td></tr>
+            <tr><td>Política ≠ operação</td><td>Governança e evidências de auditoria</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="sec-conclusao">6. Conclusão</h2>
+      <p>
+        Aprendemos que um único acesso de terceiro sem MFA pode abrir caminho até
+        o checkout de milhões de clientes. Aprendemos também que contenção rápida
+        não substitui prevenção e detecção. Política sem implementação consistente
+        não protege e não satisfaz o GDPR.
+      </p>
+      <p>
+        Seguimos investindo em identidade forte, menor privilégio, integridade do
+        código de pagamento, minimização de dados em registros e monitoramento
+        contínuo — com a disciplina de Análise e Desenvolvimento de Sistemas para
+        transformar requisito em sistema operante.
+      </p>
+      <p style="margin-top:1.5rem;font-size:0.9rem;color:var(--slate-500)">
+        Fonte factual principal: ICO — Penalty Notice: British Airways plc, 16 de outubro de 2020.<br />
+        <a href="https://ico.org.uk/media2/migrated/2618421/ba-penalty-20201016.pdf" target="_blank" rel="noopener">ico.org.uk/media2/migrated/2618421/ba-penalty-20201016.pdf</a>
+      </p>
+
+      <div class="article-end">
+        <p><a href="index.html#insights">← Voltar para Insights</a> · <a href="index.html">Ir ao Trust Center</a></p>
+      </div>
+    </article>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">
+            <span class="logo-mark">BA</span>
+            <span>British Airways</span>
+          </div>
+          <p>Trust Center acadêmico — estudo de caso de compliance com base no incidente de 2018.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navegação</h4>
+          <a href="index.html">Início</a>
+          <a href="index.html#insights">Insights</a>
+        </div>
+        <div class="footer-col">
+          <h4>Neste artigo</h4>
+          <a href="#sec-falhas">Falhas</a>
+          <a href="#sec-solucoes">Soluções ADS</a>
+        </div>
+        <div class="footer-col">
+          <h4>Referência</h4>
+          <a href="https://ico.org.uk/media2/migrated/2618421/ba-penalty-20201016.pdf" target="_blank" rel="noopener">Penalty Notice ICO</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>Material acadêmico · Estudo de caso British Airways 2018</span>
+        <span>UI inspirada em landing + blog corporativos</span>
+      </div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
